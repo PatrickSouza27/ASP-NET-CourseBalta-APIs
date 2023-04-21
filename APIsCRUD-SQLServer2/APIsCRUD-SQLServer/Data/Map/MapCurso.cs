@@ -18,7 +18,10 @@ namespace APIsCRUD_SQLServer.Data.Map
                 .HasColumnType("NVARCHAR")
             .HasMaxLength(20);
 
-            builder.HasOne(x => x.Categoria).WithOne().HasForeignKey<Categoria>(x => x.Id).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Categoria)
+                .WithMany()
+                .HasForeignKey(x=> x.CategoriaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }
