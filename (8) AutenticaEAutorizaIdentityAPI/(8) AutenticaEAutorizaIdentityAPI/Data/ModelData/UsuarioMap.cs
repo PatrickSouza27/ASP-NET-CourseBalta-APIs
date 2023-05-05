@@ -31,7 +31,25 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Data.ModelData
                 .IsRequired()
                 .HasColumnName("Password")
                 .HasColumnType("NVARCHAR")
-                .HasMaxLength(120);
+                .HasMaxLength(200);
+
+
+            builder
+                .HasMany(x => x.RolesUser)
+                .WithMany(x => x.Usuarios)
+                .UsingEntity<Dictionary<string, object>>(
+                    join => join
+                        .HasOne<Roles>()
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .HasConstraintName("FK_UserRole_RoleId")
+                        .OnDelete(DeleteBehavior.Cascade),
+                    join => join
+                        .HasOne<Usuario>()
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("FK_UserRole_UserId")
+                        .OnDelete(DeleteBehavior.Cascade));
         }
     }
 }

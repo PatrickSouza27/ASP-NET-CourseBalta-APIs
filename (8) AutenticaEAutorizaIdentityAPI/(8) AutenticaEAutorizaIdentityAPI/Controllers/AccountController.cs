@@ -1,11 +1,16 @@
-﻿using _8__AutenticaEAutorizaIdentityAPI.Services;
+﻿using _8__AutenticaEAutorizaIdentityAPI.Data;
+using _8__AutenticaEAutorizaIdentityAPI.Services;
+using _8__AutenticaEAutorizaIdentityAPI.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
 namespace _8__AutenticaEAutorizaIdentityAPI.Controllers
 {
     [ApiController]
+    [Route("teste")]
     //[Authorize] // significa que a class controller inteira tem que ter autenticação, para algum metodo não precisa como o Login, usar o [AllowAnonymous]
     public class AccountController : ControllerBase
     {
@@ -18,10 +23,15 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Controllers
 
         [AllowAnonymous] //esse metodo qualquer um pode fazer uma requisição
         [HttpPost("login")]
-        public IActionResult Login()
+        public IActionResult Login(ViewLogin login, [FromServices] ApiDataContext conn)
         {
-            var token = _tokenService.GerarToken(null);
-            return Ok(token);
+            var usuarioAccount = new CriptografiaHash(conn).VerificarUsuarioExiste(login);
+            if (usuarioAccount != null)
+            {
+                var token = _tokenService.GerarToken(usuarioAccount);
+                return Ok(token);
+            }
+            return NotFound("Usuario Não Encontrado");
         }
 
         [Authorize(Roles = "user")] //só vai ser autorizado quem tiver "user" no Claim.Roles, "user" no TokenService

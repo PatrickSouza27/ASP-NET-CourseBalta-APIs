@@ -17,14 +17,16 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Services
             var tokenDescriptior = new SecurityTokenDescriptor{
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new (ClaimTypes.Name, "patrick"),  //User.Identity.Name
-                    new (ClaimTypes.Role, "admin"),   //User.IsInRole()
-                    new (ClaimTypes.Role, "author"),
-                    new ("fruta", "banana")
+                    new (ClaimTypes.Name, usuario.Name),  //User.Identity.Name
+                    //new (ClaimTypes.Role, "admin"),   //User.IsInRole()
+                    //new (ClaimTypes.Role, "author"),
+                    //new ("fruta", "banana")
                 }),
                 Expires = DateTime.UtcNow.AddHours(8),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+
+            usuario.RolesUser.ForEach(x => tokenDescriptior.Claims.Add(ClaimTypes.Role, x.Name));
 
 
 

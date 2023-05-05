@@ -2,6 +2,7 @@
 using _8__AutenticaEAutorizaIdentityAPI.Extensions;
 using _8__AutenticaEAutorizaIdentityAPI.Models;
 using _8__AutenticaEAutorizaIdentityAPI.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
@@ -10,6 +11,7 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Controllers
 {
     [ApiController]
     [Route("categorias")]
+    [Authorize("professor")]
     public class CategoriaController : ControllerBase
     {
         [HttpGet("testing")]

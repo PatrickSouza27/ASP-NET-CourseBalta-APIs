@@ -21,6 +21,21 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("RolesUsuario", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RoleId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RolesUsuario");
+                });
+
             modelBuilder.Entity("_8__AutenticaEAutorizaIdentityAPI.Models.Categoria", b =>
                 {
                     b.Property<int>("Id")
@@ -64,6 +79,23 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Migrations
                     b.ToTable("Curso", (string)null);
                 });
 
+            modelBuilder.Entity("_8__AutenticaEAutorizaIdentityAPI.Models.Roles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("_8__AutenticaEAutorizaIdentityAPI.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -86,13 +118,30 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(60)
+                        .HasMaxLength(200)
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("Password");
 
                     b.HasKey("Id");
 
                     b.ToTable("Usuario", (string)null);
+                });
+
+            modelBuilder.Entity("RolesUsuario", b =>
+                {
+                    b.HasOne("_8__AutenticaEAutorizaIdentityAPI.Models.Roles", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_UserRole_RoleId");
+
+                    b.HasOne("_8__AutenticaEAutorizaIdentityAPI.Models.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_UserRole_UserId");
                 });
 
             modelBuilder.Entity("_8__AutenticaEAutorizaIdentityAPI.Models.Curso", b =>

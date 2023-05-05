@@ -21,9 +21,6 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Controllers
         public async Task<IActionResult> GetTodosUsuarios([FromServices] ApiDataContext conn)
             => Ok(new ResultDefault<List<Usuario>>(await conn.Usuarios.AsNoTracking().ToListAsync()));
 
-
-
-
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetInfoUsuarioUniq(int id, [FromServices] ApiDataContext conn)
         {
@@ -31,16 +28,16 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Controllers
             return UsuarioOpc != null && ModelState.IsValid ? Ok(new ResultDefault<Usuario>(UsuarioOpc)) : NotFound(new ResultDefault<Usuario>("Usuário não encontrado!"));
         }
 
-
-
         [HttpPost("adicionar")]
         public async Task<IActionResult> AdicionarCurso([FromServices] ApiDataContext conn, [FromBody] ViewUsuario user)
         {
             if (!ModelState.IsValid) return BadRequest(new ResultDefault<Usuario>(ModelState.ExtensionMessage()));
+
             var passwordHasher = new PasswordHasher<ViewUsuario>();
             var hashedPassword = passwordHasher.HashPassword(user, user.Password);   ///criptografa senha, no caso da senha se passa o hashedPassword
             //Lembre-se de que você precisa usar o método VerifyHashedPassword em vez de HashPassword durante o processo de login para verificar se a senha informada pelo usuário é válida.
-            await conn.Usuarios.AddAsync(new Usuario(user.Name, user.Login, user.Password));
+
+            await conn.Usuarios.AddAsync(new Usuario(user.Name, user.Login, hashedPassword));
             conn.SaveChanges();
 
             return Created("usuario salvo", user);
