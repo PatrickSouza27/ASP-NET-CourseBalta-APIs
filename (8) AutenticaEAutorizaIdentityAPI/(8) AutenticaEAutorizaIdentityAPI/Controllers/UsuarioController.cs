@@ -5,7 +5,7 @@ using _8__AutenticaEAutorizaIdentityAPI.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using System.Data.Common;
 
 namespace _8__AutenticaEAutorizaIdentityAPI.Controllers
 {
@@ -37,10 +37,26 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Controllers
             var hashedPassword = passwordHasher.HashPassword(user, user.Password);   ///criptografa senha, no caso da senha se passa o hashedPassword
             //Lembre-se de que você precisa usar o método VerifyHashedPassword em vez de HashPassword durante o processo de login para verificar se a senha informada pelo usuário é válida.
 
-            await conn.Usuarios.AddAsync(new Usuario(user.Name, user.Login, hashedPassword));
-            conn.SaveChanges();
+            try
+            {
+                await conn.Usuarios.AddAsync(new Usuario(user.Name, user.Login, hashedPassword));
+                conn.SaveChanges();
 
-            return Created("usuario salvo", user);
+                return Ok(new ResultDefault<dynamic>(new
+                {
+                    user.Name,
+                    user.Login,
+                    hashedPassword
+                }));
+            }catch(DbUpdateException erro)
+            {
+                return StatusCode(400, new ResultDefault<string>("05XX2 - Este Login já Existe"));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultDefault<string>("05XX1 - Falha Interna"));
+            }
+            
         }
 
         [HttpPut("update/{id:int}")]

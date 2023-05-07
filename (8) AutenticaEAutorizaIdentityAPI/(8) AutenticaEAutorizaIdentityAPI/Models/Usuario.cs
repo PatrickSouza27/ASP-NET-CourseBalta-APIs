@@ -16,6 +16,10 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Models
             Name = name;
             Login = login;
             Password = password;
+            //RolesUser.AddRange(new List<Roles>{
+            //    new Roles {Name = "user" },
+            //    new Roles {Name = "author"}
+            //});
         }
         public void UpdateUser(ViewUsuario user)
         {
@@ -26,14 +30,6 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Models
 
         public void AdicionarRole(Roles role)
             => RolesUser.Add(role);
-
-        public void Preencher()
-        {
-            RolesUser.AddRange(new List<Roles>{
-                new Roles {Name = "user" },
-                new Roles {Name = "author"}
-            });
-        }
-        
+       
     }
 }

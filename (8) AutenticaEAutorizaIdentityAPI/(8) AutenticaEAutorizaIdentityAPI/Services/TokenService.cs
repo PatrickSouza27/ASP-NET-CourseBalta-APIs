@@ -26,8 +26,8 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            usuario.RolesUser.ForEach(x => tokenDescriptior.Claims.Add(ClaimTypes.Role, x.Name));
-
+            usuario.RolesUser.ForEach(x => tokenDescriptior.Subject.AddClaim(new Claim(ClaimTypes.Role, x.Name)));
+            //ta dando duplicação pq toda vez ta sendo gerado um new Roles lá, o Roles User name tem que ser unico tbm, assim como o login
 
 
             var token = manipularToken.CreateToken(tokenDescriptior);

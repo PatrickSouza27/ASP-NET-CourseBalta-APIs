@@ -1,4 +1,6 @@
 ﻿using _8__AutenticaEAutorizaIdentityAPI.Data;
+using _8__AutenticaEAutorizaIdentityAPI.Extensions;
+using _8__AutenticaEAutorizaIdentityAPI.Models;
 using _8__AutenticaEAutorizaIdentityAPI.Services;
 using _8__AutenticaEAutorizaIdentityAPI.ViewModel;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace _8__AutenticaEAutorizaIdentityAPI.Controllers
 {
@@ -25,11 +28,13 @@ namespace _8__AutenticaEAutorizaIdentityAPI.Controllers
         [HttpPost("login")]
         public IActionResult Login(ViewLogin login, [FromServices] ApiDataContext conn)
         {
+            if (!ModelState.IsValid) return BadRequest(new ResultDefault<Usuario>(ModelState.ExtensionMessage()));
+
             var usuarioAccount = new CriptografiaHash(conn).VerificarUsuarioExiste(login);
             if (usuarioAccount != null)
             {
                 var token = _tokenService.GerarToken(usuarioAccount);
-                return Ok(token);
+                return Ok(new ResultDefault<string>(token, null));
             }
             return NotFound("Usuario Não Encontrado");
         }
