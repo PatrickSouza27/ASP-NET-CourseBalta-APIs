@@ -24,7 +24,7 @@
 Configuration.ApiKeyName = app.Configuration.GetValue<string>(key: "ApiKeyName");
 Configuration.ApiKey = app.Configuration.GetValue<string>(key: "ApiKey");
 ```
-### Função Program Authentication / Authorizatiron
+### Função Program Authentication / Authorization
 ```C#
  void ConfigurationAuthentication(WebApplicationBuilder builder)
 {
