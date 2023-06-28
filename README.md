@@ -96,5 +96,9 @@ app.MapControllers();
 app.Run();
 }
 ```
+### Certificado 
+
+![Captura de tela 2023-02-21 130017](https://github.com/PatrickSouza27/ASP-NET-CourseBalta-APIs/assets/77933748/e6bc5feb-f189-4a91-a40c-d5354918b561)
+
 
 
